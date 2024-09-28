@@ -1,5 +1,5 @@
 from objects.obj import Boneco
 
-player = Boneco("Jorge", "Guerreiro", 0, 0, 100, 10)
+p1 = Boneco("Porra", "Guerreiro", 0, 0, 100, 10)
 
-player.show_atr()
+p1.show_atr()

@@ -7,6 +7,7 @@ class Boneco:
         self.xp = xp
         self.vida = vida
         self.d_Atk = d_Atk
+        self.acao = False
 
 
     def show_atr(self):
@@ -16,3 +17,9 @@ class Boneco:
               f"XP: {self.xp}\n"
               f"Vida: {self.vida}\n"
               f"Dano de Ataque: {self.d_Atk}")
+
+    def dano(self):
+        if not self.acao:
+            self.vida = self.vida - 50
+            return self.vida
+
