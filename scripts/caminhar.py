@@ -11,7 +11,6 @@ class Item:
         self.nome = nome
         self.tipo = tipo
 
-
 class Boneco:
 
     def __init__(self, nome):
@@ -48,6 +47,7 @@ class Boneco:
                         print("Escapou com sucesso!")
                         break
                     else:
+                        #>>>Lógica de batalha<<<
                         pass
         self.movimento = False  # Resetar o estado de movimento após a ação
 
@@ -145,13 +145,50 @@ def inimigos_animais_disp():
 
     return random.choice(inimigos_disponiveis)
 
-# Criar o boneco e simular movimento
-p1 = Boneco('player')
+def start():
+    print('--- TEXTLE RUNNERS ---')
+    print('')
+    print('\t1 - NOVO JOGO')
+    print('\t2 - CONTINUAR')
+    print('\t3 - SAIR\n')
+    print("----------------------")
+    res = int(input('Digite o numero de acordo com as opções: '))
+    while res not in [1, 2, 3]:
+        res = int(input('Digite o numero de acordo com as opções: '))
+
+    if res == 1:
+        criar_novo_jogo(input("Digite o nome do seu personagem: "))
+    if res == 2:
+        carregar_jogo()
+    if res == 3:
+        creditos()
+        exit()
+
+def criar_novo_jogo(nome):
+    global char
+    char = Boneco(nome)
+
+def carregar_jogo():
+    #Criar logica para carregar o jogo
+    pass
+
+
+def creditos():
+    print("\nJogo criado e desenvolvido por:\n"
+          "\033[35mMatheus dos Santos - github.com/theuslinor\033[m\n"
+          "\033[31mVinicius Oliveira - github.com/kat4r\033[m")
+
+#----------------------------------------------
+# O Jogo roda aqui
+
+start()
+
+
 
 for i in range(10):
-    p1.caminhar()
+    char.caminhar()
 
 # Mostrar o inventário final
-p1.equipar_arma()
-p1.mostrar_inv()
+char.equipar_arma()
+char.mostrar_inv()
 
