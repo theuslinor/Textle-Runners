@@ -20,6 +20,7 @@ class Boneco:
 
     def dano(self):
         if not self.acao:
+            #dano de ataque hardcodded aqui \/
             self.vida = self.vida - 50
             return self.vida
 
