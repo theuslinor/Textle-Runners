@@ -40,6 +40,7 @@ class Boneco:
             escolha = input("Lutar ou Fugir? (S/N) S = Lutar / N = Fugir: ")
             while escolha not in ['S', 'N']:
                 if escolha == "S":
+                    #Só por implementar sua lógica de batalha aqui theuz
                     pass
                 else:
                     chance = random.randint(0, 100)
