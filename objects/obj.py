@@ -34,7 +34,7 @@ class Boneco:
         global dano_total
         dano_item = self.item.dano if self.item else 0
         dano_total = (dano_item * (self.d_Atk / 100)) + dano_item
-        print(f"{self.nome} ataca {outro.nome} causando {dano_total:.2f} de dano!")
+        print(f"\n{self.nome} ataca {outro.nome} causando {dano_total:.1f} de \033[31mdano\033[0m!\n")
         outro.receber_dano(dano_total)
 
     def receber_dano(self, dano):
@@ -45,6 +45,6 @@ class Boneco:
         self.vida -= dano_recebido
         if self.vida < 0:
             self.vida = 0
-        print(f"{self.nome} recebeu {dano_recebido:.2f} de dano e agora tem {self.vida:.2f} de vida.")
+        print(f"{self.nome} recebeu {dano_recebido:.1f} de \033[31mdano\033[0m e agora tem {self.vida:.1f} de \033[32mvida\033[0m.")
 
 
