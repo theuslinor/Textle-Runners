@@ -1,11 +1,13 @@
 from objects.obj import Boneco, Item
 
-player = Boneco("Russo", "Guerreiro", 1, 0, 1000, 15)
-inimigo = Boneco("Goblin", "Guerreiro", 1, 0, 1000, 15)
+player = Boneco("PLAYER", "Guerreiro", 1, 0, 1000, 15, 15)
+inimigo = Boneco("INIMIGO", "Guerreiro", 1, 0, 1000, 15, 15)
 
-espada = Item("Espada", 50)
-punho = Item("Punho", 5)
+espada = Item("Espada", 50, 0)
+punho = Item("Punho", 5,0)
+escudo = Item("Escudo", 0,15)
 
+player.equipar_item(espada)
 player.equipar_item(espada)
 inimigo.equipar_item(punho)
 
