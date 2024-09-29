@@ -6,20 +6,63 @@ class Inimigos_animais:
         self.vida = vida
         self.dano = dano
 
+    def receber_dano(self, dano):
+        self.vida -= dano
+        if self.vida < 0:
+            self.vida = 0
+        print(f"{self.nome} recebeu \033[32m{dano:.2f}\033[m de dano e agora tem \033[31m{self.vida:.2f}\033[m de vida.")
+
 class Item:
-    def __init__(self, nome, tipo):
+    def __init__(self, nome, tipo, dano=0):
         self.nome = nome
         self.tipo = tipo
+        self.dano = dano
 
 class Boneco:
 
-    def __init__(self, nome):
+    def __init__(self, nome, forca, nivel=0, arma=None):
+        self.vida  = 100
+        self.nivel = nivel
         self.nome = nome
         self.movimento = False
         self.qtd_passos = 0
         self.inventario = []
         self.inimigo_encontro = None
-        self.arma = None
+        self.arma = arma
+        self.forca = forca
+
+
+    def show_player(self):
+        if self.nivel == 0:
+            print(f"Você, {self.nome}, um intrépido aventureiro, se prepara para desbravar as trevas da masmorra ancestral.\n"
+                  f"Com seu inventário em mãos, você carrega itens que podem mudar o rumo da sua jornada.\n" 
+                  f"Enquanto o eco dos seus passos ressoa nas paredes frias, o cheiro de aventuras e perigos paira no ar.\n"
+                  f"Seus desafios começam agora: criaturas ferozes, armadilhas astutas e enigmas enigmáticos esperam por você\n"
+                  f"nas sombras. Lembre-se, cada item do seu inventário pode ser a chave para a sobrevivência!\n"
+                  f"Prepare-se para escrever sua própria lenda. Amasse seus medos, pois a aventura aguarda!\n")
+
+
+        if len(self.inventario) < 1:
+            print(f"Você possui ZERO itens no seu inventário, boa sorte em sua nova aventura!\n\n")
+        else:
+            print(f"Você possui {len(self.inventario)} itens no inventário, deseja equipar algum?")
+
+
+    def atacar(self, inimigo):
+        if self.arma:
+            dano_item = self.arma.dano if self.arma else 0
+            dano_total = (dano_item * (self.forca / 100)) + dano_item
+            print(f"{self.nome} ataca {inimigo.nome} causando {dano_total:.2f} de dano!")
+            inimigo.receber_dano(dano_total)
+        else:
+            self.receber_dano(inimigo.dano)
+
+
+    def receber_dano(self, dano):
+        self.vida -= dano
+        if self.vida < 0:
+            self.vida = 0
+        print(f"{self.nome} recebeu \033[32m{dano:.2f}\033[m de dano e agora tem \033[31m{self.vida:.2f}\033[m de vida.")
 
     def caminhar(self):
         # Simular o movimento a cada chamada
@@ -33,22 +76,42 @@ class Boneco:
             mensagem = self.set_item(item_encontrado)
             print(mensagem)  # Agora imprime a mensagem de item encontrado
         else:
-            inimigo_encontrando = inimigos_animais_disp()
-            mensagem = self.set_inimigo(inimigo_encontrando)
-            print(mensagem, )
-            escolha = input("Lutar ou Fugir? (S/N) S = Lutar / N = Fugir: ")
+            inimigo_encontrado = inimigos_animais_disp()
+            mensagem = self.set_inimigo(inimigo_encontrado)
+            print(mensagem)
+            escolha = input("Lutar ou Fugir? (S/N) S = Lutar / N = Fugir: ").upper()
             while escolha not in ['S', 'N']:
-                if escolha == "S":
-                    #Só por implementar sua lógica de batalha aqui theuz
-                    pass
+                escolha = input("Lutar ou Fugir? (S/N) S = Lutar / N = Fugir: ").upper()
+            if escolha == "S":
+                self.inimigo_encontro = True
+                while self.inimigo_encontro:
+                    self.atacar(inimigo_encontrado)
+                    if inimigo_encontrado.vida > 1:
+                        self.receber_dano(inimigo_encontrado.dano)
+                        if self.vida < 1:
+                            print("Você perdeu!")
+                            creditos()
+                            exit()
+                    elif inimigo_encontrado.vida < 1:
+                        resp = 3
+                        while resp not in [1, 2]:
+                            resp = input(f"{inimigo_encontrado.nome} DERROTADO!\n"
+                                         f"Deseja equipar algum item ou continuar sua exploração?\n"
+                                         f"Equipar = 1 | Continuar 2\n"
+                                         f"Faça sua escolha com base nos numeros demonstrados")
+                        if resp == 1:
+                            self.equipar_arma()
+
+                        self.inimigo_encontrado = False
+
                 else:
                     chance = random.randint(0, 100)
                     if chance < 20:
                         print("Escapou com sucesso!")
-                        break
+
                     else:
-                        #>>>Lógica de batalha<<<
-                        pass
+                        self.atacar(inimigo_encontrado)
+
         self.movimento = False  # Resetar o estado de movimento após a ação
 
     def equipar_arma(self):
@@ -87,32 +150,33 @@ class Boneco:
 
 def itens_disp():
     itens_possiveis = [
-        Item("Galaxy Note 7", "Arma"),
+        Item("Galaxy Note 7", "Arma", dano=25),
         Item("Poção de Vida", "Consumível"),
-        Item("Espada Curta", "Arma"),
-        Item("Espada Longa", "Arma"),
-        Item("Machado de Batalha", "Arma"),
+        Item("Espada Curta", "Arma", dano=10),
+        Item("Espada Longa", "Arma", dano=15),
+        Item("Machado de Batalha", "Arma", dano=20),
         Item("Elixir de Mana", "Consumível"),
-        Item("Arco Curto", "Arma"),
+        Item("Arco Curto", "Arma", dano=12),
         Item("Flechas Infinitas", "Acessório"),
         Item("Poção de Invisibilidade", "Consumível"),
         Item("Escudo de Bronze", "Defesa"),
         Item("Elmo de Aço", "Equipamento"),
         Item("Anel de Regeneração", "Acessório"),
         Item("Poção de Cura Rápida", "Consumível"),
-        Item("Bastão de Magia", "Arma"),
-        Item("Daga Envenenada", "Arma"),
+        Item("Bastão de Magia", "Arma", dano=18),
+        Item("Daga Envenenada", "Arma", dano=8),
         Item("Cota de Malha", "Defesa"),
         Item("Botas da Velocidade", "Equipamento"),
         Item("Chave do Cofre", "Especial"),
-        Item("Espada Flamejante", "Arma"),
+        Item("Espada Flamejante", "Arma", dano=25),
         Item("Livro de Magias", "Consumível"),
         Item("Poção de Resistência", "Consumível"),
-        Item("Lança de Ouro", "Arma"),
+        Item("Lança de Ouro", "Arma", dano=30),
         Item("Escudo de Cristal", "Defesa"),
         Item("Armadura de Dragão", "Equipamento"),
         Item("Amuleto da Sorte", "Acessório")
     ]
+
     return random.choice(itens_possiveis)
 
 def inimigos_animais_disp():
@@ -157,16 +221,27 @@ def start():
         res = int(input('Digite o numero de acordo com as opções: '))
 
     if res == 1:
-        criar_novo_jogo(input("Digite o nome do seu personagem: "))
+        #criar_novo_jogo(input("Digite o nome do seu personagem: "))
+        debug()
+        debugger.show_player()
     if res == 2:
         carregar_jogo()
     if res == 3:
         creditos()
         exit()
 
+
+
+
 def criar_novo_jogo(nome):
     global char
-    char = Boneco(nome)
+    char = Boneco(nome, 10, nivel=0)
+    return char
+
+def debug():
+    global debugger
+    debugger = Boneco("Kat", nivel=10, arma=Item("Galaxy Note 7", "Arma", dano=25), forca=10)
+
 
 def carregar_jogo():
     #Criar logica para carregar o jogo
@@ -180,16 +255,18 @@ def creditos():
 
 #----------------------------------------------
 # O Jogo roda aqui
-#-
+#----------------------------------------------
 
 start()
 
 
 
 for i in range(10):
-    char.caminhar()
-
+    #char.caminhar()
+    debugger.caminhar()
 # Mostrar o inventário final
-char.equipar_arma()
-char.mostrar_inv()
+#char.equipar_arma()
+#char.mostrar_inv()
+
+
 
