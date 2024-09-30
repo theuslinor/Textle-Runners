@@ -21,7 +21,7 @@ class Item:
     def __init__(self, nome, tipo, dano=0):
         self.nome = nome
         self.tipo = tipo
-        self.dano = dano
+        self.dano = int(dano)
 
 
 class Boneco:
@@ -54,6 +54,8 @@ class Boneco:
             print(f"\033[32m{pos+1}\033[m - \033[36m{item.nome}\033[m")
         if self.arma:
             print(f"Item equipado {self.arma.nome}")
+            print(type(self.arma.dano))
+            print(self.arma.dano)
 
     def atacar(self, inimigo):
         if self.arma:
@@ -118,11 +120,7 @@ class Boneco:
                                      f"Equipar = 1 | Continuar = 2\n"
                                      f"Faça sua escolha com base nos números demonstrados: "))
                 if resp == 1:
-                    pass
-                #PLACEHOLDER
-                #PLACEHOLDER
-                #PLACEHOLDER
-                #PLACEHOLDER
+                    self.show_inventario()
 
         else:
             # Modo Autobattle
@@ -182,8 +180,8 @@ class Boneco:
                 print(f"tamanho do inventário: {len(self.inventario)}")
                 print("Item não encontrado, verifique o número utilizado")
                 resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o numero indicado acima]: "))-1
-            self.arma = self.inventario[resposta].nome
-            print(f"Você equipou {self.arma}")
+            self.arma = self.inventario[resposta]
+            print(f"Você equipou {self.arma.nome}")
 
     def set_item(self, item):
         self.inventario.append(item)
