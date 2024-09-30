@@ -1,27 +1,6 @@
 import random
-
-class Inimigos_animais:
-
-
-    def __init__(self, nome, vida, dano):
-        self.nome = nome
-        self.vida = vida
-        self.dano = dano
-
-    def receber_dano(self, dano):
-        self.vida -= dano
-        if self.vida < 0:
-            self.vida = 0
-        print(f"{self.nome} recebeu \033[32m{dano:.2f}\033[m de dano e agora tem \033[31m{self.vida:.2f}\033[m de vida.")
-
-
-class Item:
-
-
-    def __init__(self, nome, tipo, dano=0):
-        self.nome = nome
-        self.tipo = tipo
-        self.dano = int(dano)
+from objects.itens.itens_dano_fisico import *
+from objects.inimigos.inimigos_selvagens import *
 
 
 class Boneco:
@@ -37,7 +16,7 @@ class Boneco:
         self.inimigo_encontro = None
         self.arma = arma
         self.forca = forca
-        self.punhos = Item("Punhos","Arma",5)
+        self.punhos = Item("Punhos","Arma",500)
 
     def show_player(self):
         if self.nivel == 0:
@@ -54,8 +33,6 @@ class Boneco:
             print(f"\033[32m{pos+1}\033[m - \033[36m{item.nome}\033[m")
         if self.arma:
             print(f"Item equipado {self.arma.nome}")
-            print(type(self.arma.dano))
-            print(self.arma.dano)
 
     def atacar(self, inimigo):
         if self.arma:
@@ -203,69 +180,6 @@ class Boneco:
                 f"\033[36mArma equipada:\033[m {self.arma.nome}\n")
 
 
-
-
-def itens_disp():
-    itens_possiveis = [
-        Item("Galaxy Note 7", "Arma", dano=25),
-        Item("Poção de Vida", "Consumível"),
-        Item("Espada Curta", "Arma", dano=10),
-        Item("Espada Longa", "Arma", dano=15),
-        Item("Machado de Batalha", "Arma", dano=20),
-        Item("Elixir de Mana", "Consumível"),
-        Item("Arco Curto", "Arma", dano=12),
-        Item("Flechas Infinitas", "Acessório"),
-        Item("Poção de Invisibilidade", "Consumível"),
-        Item("Escudo de Bronze", "Defesa"),
-        Item("Elmo de Aço", "Equipamento"),
-        Item("Anel de Regeneração", "Acessório"),
-        Item("Poção de Cura Rápida", "Consumível"),
-        Item("Bastão de Magia", "Arma", dano=18),
-        Item("Daga Envenenada", "Arma", dano=8),
-        Item("Cota de Malha", "Defesa"),
-        Item("Botas da Velocidade", "Equipamento"),
-        Item("Chave do Cofre", "Especial"),
-        Item("Espada Flamejante", "Arma", dano=25),
-        Item("Livro de Magias", "Consumível"),
-        Item("Poção de Resistência", "Consumível"),
-        Item("Lança de Ouro", "Arma", dano=30),
-        Item("Escudo de Cristal", "Defesa"),
-        Item("Armadura de Dragão", "Equipamento"),
-        Item("Amuleto da Sorte", "Acessório")
-    ]
-
-    return random.choice(itens_possiveis)
-
-def inimigos_animais_disp():
-    inimigos_disponiveis = [
-        Inimigos_animais("Aranha", 15, 5),
-        Inimigos_animais("Rato", 10, 3),
-        Inimigos_animais("Escorpião", 15, 10),
-        Inimigos_animais("Lobo", 20, 10),
-        Inimigos_animais("Urso", 30, 15),
-        Inimigos_animais("Cobra", 12, 8),
-        Inimigos_animais("Águia", 18, 7),
-        Inimigos_animais("Javali", 25, 12),
-        Inimigos_animais("Leão", 35, 18),
-        Inimigos_animais("Tigre", 40, 20),
-        Inimigos_animais("Crocodilo", 45, 22),
-        Inimigos_animais("Gorila", 50, 15),
-        Inimigos_animais("Rinoceronte", 60, 25),
-        Inimigos_animais("Morcego", 10, 4),
-        Inimigos_animais("Centopeia Gigante", 20, 6),
-        Inimigos_animais("Hiena", 22, 9),
-        Inimigos_animais("Lobo Alfa", 35, 15),
-        Inimigos_animais("Elefante", 70, 30),
-        Inimigos_animais("Falcão", 17, 6),
-        Inimigos_animais("Canguru", 28, 13),
-        Inimigos_animais("Tubarão", 50, 20),
-        Inimigos_animais("Hipopótamo", 55, 25),
-        Inimigos_animais("Dragão de Komodo", 38, 18),
-        Inimigos_animais("Caranguejo Gigante", 20, 10)
-    ]
-
-    return random.choice(inimigos_disponiveis)
-
 def start():
     print('--- TEXTLE RUNNERS ---')
     print('')
@@ -338,7 +252,6 @@ def creditos():
     print("\nJogo criado e desenvolvido por:\n"
           "\033[35mMatheus dos Santos - github.com/theuslinor\033[m\n"
           "\033[31mVinicius Oliveira - github.com/kat4r\033[m")
-
 
 #----------------------------------------------
 # O Jogo roda aqui
