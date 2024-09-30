@@ -20,7 +20,7 @@ class Boneco:
         self.inimigo_encontro = None
         self.arma = arma
         self.forca = forca
-        self.punhos = Item("Punhos","Arma",500)
+        self.punhos = ItemDanoPhys("Punhos", "Arma", 500)
 
     def show_player(self):
         if self.nivel == 0:
@@ -246,7 +246,7 @@ def criar_novo_jogo(nome):
 
 def debug():
     global debugger
-    debugger = Boneco("Kat", nivel=10, arma=Item("Galaxy Note 7", "Arma", dano=25), forca=10)
+    debugger = Boneco("Kat", nivel=10, arma=ItemDanoPhys("Galaxy Note 7", "Arma", dano=25), forca=10)
 
 def carregar_jogo():
     #Criar logica para carregar o jogo
