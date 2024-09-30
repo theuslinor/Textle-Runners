@@ -5,7 +5,8 @@ class ItemDefesa:
         self.dano = dano
         self.defesa = defesa
         self.parte = parte
-def itens_disp():
+
+def itens_disp_equipamentos():
 
     from random import choice
 

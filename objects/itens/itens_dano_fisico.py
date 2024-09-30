@@ -3,7 +3,8 @@ class ItemDanoPhys:
         self.nome = nome
         self.tipo = tipo
         self.dano = dano
-def itens_disp():
+
+def itens_disp_dano_fisico():
 
     from random import choice
     itens_possiveis = [
