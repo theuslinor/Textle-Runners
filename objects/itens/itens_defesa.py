@@ -3,7 +3,8 @@ class ItemDefesa:
         self.nome = nome
         self.tipo = tipo
         self.dano = dano
-def itens_disp():
+
+def itens_disp_defesa():
 
     from random import choice
     itens_possiveis = [
