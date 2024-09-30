@@ -37,7 +37,7 @@ class Boneco:
         self.inimigo_encontro = None
         self.arma = arma
         self.forca = forca
-        self.punhos = Item("Punhos","Arma",5)
+        self.punhos = Item("Punhos","Arma",500)
 
     def show_player(self):
         if self.nivel == 0:
@@ -182,8 +182,8 @@ class Boneco:
                 print(f"tamanho do inventário: {len(self.inventario)}")
                 print("Item não encontrado, verifique o número utilizado")
                 resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o numero indicado acima]: "))-1
-            self.arma = self.inventario[resposta].nome
-            print(f"Você equipou {self.arma}")
+            self.arma = self.inventario[resposta]
+            print(f"Você equipou {self.arma.nome}")
 
     def set_item(self, item):
         self.inventario.append(item)
