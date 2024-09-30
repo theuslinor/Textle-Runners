@@ -1,4 +1,4 @@
-from objects.obj import Boneco, Item
+from sssssss.obj import Boneco, Item
 
 player = Boneco("\033[32mPLAYER\033[0m", "Guerreiro", 1, 0, 1000, 15, 15)
 inimigo = Boneco("\033[31mINIMIGO\033[0m", "Guerreiro", 1, 0, 1000, 15, 15)

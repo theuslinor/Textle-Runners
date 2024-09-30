@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import random
 from objects.itens.itens_dano_fisico import *
 from objects.inimigos.inimigos_selvagens import *
