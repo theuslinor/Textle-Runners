@@ -8,11 +8,6 @@ def itens_disp():
     from random import choice
     itens_possiveis = [
         ItemConsumivel("Poção de Vida", "Consumível"),
-        ItemConsumivel("Elixir de Mana", "Consumível"),
-        ItemConsumivel("Poção de Invisibilidade", "Consumível"),
-        ItemConsumivel("Poção de Cura Rápida", "Consumível"),
-        ItemConsumivel("Poção de Resistência", "Consumível"),
-        ItemConsumivel("Livro de Magias", "Consumível")
     ]
 
     return choice(itens_possiveis)
