@@ -9,7 +9,6 @@ from objects.inimigos.inimigos_selvagens import *
 
 class Boneco:
 
-
     def __init__(self, nome, forca, nivel=0, arma=None):
         self.vida  = 100
         self.nivel = nivel
