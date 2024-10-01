@@ -176,7 +176,7 @@ class Boneco:
         if len(self.inventario) < 1:
             print(f"Você não possui itens para equipar")
         else:
-            resposta = 15
+            resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o número indicado acima]: ")) - 1
             while resposta >= len(self.inventario):  # Corrigido para garantir que o índice está dentro do limite
                 print(f"Tamanho do inventário: {len(self.inventario)}")
                 print("Item não encontrado, verifique o número utilizado")
@@ -282,9 +282,16 @@ def gameloop():
 
         elif resp == 2:
             char.show_inventario()
-            equip = input("Deseja equipar algo? [ S / N ]: ").upper()
-            while equip not in ['S', 'N']:
+
+            try:
                 equip = input("Deseja equipar algo? [ S / N ]: ").upper()
+                while equip not in ['S', 'N']:
+                    equip = input("Deseja equipar algo? [ S / N ]: ").upper()
+            except Exception as erro:
+                print("Erro detectado, reiniciando")
+                print(f"Erro encontrado {erro}")
+                continue
+
             if equip == 'S':
                 char.equipar_arma()
             else:
