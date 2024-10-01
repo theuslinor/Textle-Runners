@@ -1,8 +1,6 @@
 import sys
 import os
 import random
-from os import confstr
-
 from objects.itens.itens_consumiveis import itens_disp_consumiveis
 from objects.itens.itens_defesa import itens_disp_defesa
 
@@ -42,6 +40,12 @@ class Boneco:
             print(f"\033[32m{pos+1}\033[m - \033[36m{item.nome}\033[m")
         if self.arma:
             print(f"Item equipado {self.arma.nome}")
+
+
+    def curar_se(self,item):
+        print(f"{item.nome} consumida!")
+        self.vida += item.cura
+        print(f"Você se curou em {item.cura}, vida: {self.vida}")
 
     def atacar(self, inimigo):
         if self.arma:
@@ -172,15 +176,24 @@ class Boneco:
     def equipar_arma(self):
         if len(self.inventario) < 1:
             print(f"Você não possui itens para equipar")
-
         else:
             resposta = 15
-            while resposta > len(self.inventario):
-                print(f"tamanho do inventário: {len(self.inventario)}")
+            while resposta >= len(self.inventario):  # Corrigido para garantir que o índice está dentro do limite
+                print(f"Tamanho do inventário: {len(self.inventario)}")
                 print("Item não encontrado, verifique o número utilizado")
-                resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o numero indicado acima]: "))-1
-            self.arma = self.inventario[resposta]
-            print(f"Você equipou {self.arma.nome}")
+                resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o número indicado acima]: ")) - 1
+
+                # Verifica se o item existe e se é consumível
+                if self.inventario[resposta] and self.inventario[resposta].tipo == "Consumível":
+                    # Executa a cura antes de remover o item
+                    self.curar_se(self.inventario[resposta])  # Utiliza o item atual
+                    self.inventario.pop(resposta)  # Agora remove o item consumível
+                    break
+
+                # Verifica se o item possui dano, ou seja, é uma arma
+                elif self.inventario[resposta].dano > 0:
+                    self.arma = self.inventario[resposta]
+                    print(f"Você equipou {self.arma.nome}")
 
     def set_item(self, item):
         self.inventario.append(item)
@@ -277,7 +290,6 @@ def gameloop():
             else:
                 continue
         elif resp == 3:
-            print("Saida por gameloop")
             creditos()
             exit()
 
