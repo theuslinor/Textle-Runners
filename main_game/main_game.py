@@ -22,9 +22,9 @@ class Boneco:
         self.inimigo_encontro = None
         self.arma = arma
         self.forca = forca
-        self.punhos = ItemDanoPhys("Punhos", "Arma", 500)
+        self.punhos = ItemDanoPhys("Punhos", "Arma", 5)
 
-    def show_player(self):
+    def show_lore(self):
         if self.nivel == 0:
             print(f"Você, {self.nome}, um intrépido aventureiro, se prepara para desbravar as trevas da masmorra ancestral.\n"
                   f"Com seu inventário em mãos, você carrega itens que podem mudar o rumo da sua jornada.\n" 
@@ -50,7 +50,6 @@ class Boneco:
         if self.arma:
             dano_item = self.arma.dano if self.arma else 0
             dano_total = (dano_item * (self.forca / 100)) + dano_item
-            print(f"{self.nome} ataca {inimigo.nome} causando {dano_total:.2f} de dano!")
             inimigo.receber_dano(dano_total)
         else:
             self.arma = self.punhos
@@ -98,6 +97,7 @@ class Boneco:
                     else:
                         print(f"Você derrotou o {inimigo_encontrado.nome}!")
                         break
+
                 if escolha_turno == 2:
                     self.show_inventario()
 
@@ -123,11 +123,20 @@ class Boneco:
                     self.show_inventario()
 
         else:
+            from time import sleep
             # Modo Autobattle
+
+            turnos = 0
             while inimigo_encontrado.vida > 0 and self.vida > 0:
+                turnos += 1
+                print(f"\n\tTurno: {turnos}")
+                sleep(1)
+
                 self.atacar(inimigo_encontrado)
                 if inimigo_encontrado.vida > 0:
                     self.receber_dano(inimigo_encontrado.dano)
+                    sleep(0.7)
+
                 if self.vida <= 0:
                     print("Você foi derrotado!")
                     creditos()
@@ -262,7 +271,7 @@ def start():
 
 
 def gameloop():
-    char.show_player()
+    char.show_lore()
 
     print(f"Sua jornada começa aqui\n")
     while True:
