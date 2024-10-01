@@ -1,11 +1,11 @@
 import sys
 import os
 import random
-from objects.itens.itens_consumiveis import itens_disp_consumiveis
-from objects.itens.itens_defesa import itens_disp_defesa
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from objects.itens.itens_consumiveis import itens_disp_consumiveis
+from objects.itens.itens_defesa import itens_disp_equipamentos
 from objects.itens.itens_dano_fisico import *
 from objects.inimigos.inimigos_selvagens import *
 
@@ -146,7 +146,7 @@ class Boneco:
         # Checar chance de encontrar um item
         if random.randint(0, 100) < 50:
 
-            item_encontrado = random.choice([itens_disp_dano_fisico(), itens_disp_defesa(), itens_disp_consumiveis()])
+            item_encontrado = random.choice([itens_disp_dano_fisico(), itens_disp_equipamentos(), itens_disp_consumiveis()])
             mensagem = self.set_item(item_encontrado)
             print(mensagem)  # Agora imprime a mensagem de item encontrado
 
