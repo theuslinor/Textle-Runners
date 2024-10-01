@@ -1,6 +1,9 @@
 import sys
 import os
 import random
+from objects.itens.itens_consumiveis import itens_disp_consumiveis
+from objects.itens.itens_defesa import itens_disp_defesa
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from objects.itens.itens_dano_fisico import *
@@ -37,6 +40,12 @@ class Boneco:
         if self.arma:
             print(f"Item equipado {self.arma.nome}")
 
+
+    def curar_se(self,item):
+        print(f"{item.nome} consumida!")
+        self.vida += item.cura
+        print(f"Você se curou em {item.cura}, vida: {self.vida}")
+
     def atacar(self, inimigo):
         if self.arma:
             dano_item = self.arma.dano if self.arma else 0
@@ -53,8 +62,13 @@ class Boneco:
         print(f"{self.nome} recebeu \033[32m{dano:.2f}\033[m de dano e agora tem \033[31m{self.vida:.2f}\033[m de vida.")
 
     def batalha(self, inimigo_encontrado):
-        modo = input(
-            "Deseja realizar a batalha por turnos? (S/N) S = Turn based battle | N = Modo Autobattle: ").upper()
+
+        global frase_continuidade
+        frase_continuidade = (f"Deseja equipar algum item ou continuar sua exploração?\n"
+                              f"[ 1 ] - Equipar\n"
+                              f"[ 2 ] - Continuar\n")
+
+        modo = "frase"
         while modo not in ['S', 'N']:
             modo = input(
                 "Deseja realizar a batalha por turnos? (S/N) S = Turn based battle | N = Modo Autobattle: ").upper()
@@ -67,18 +81,24 @@ class Boneco:
                 print(f"Sua vida: {self.vida} | Vida do inimigo: {inimigo_encontrado.vida}\n")
 
                 # Prompt para o jogador escolher entre atacar ou usar um item
-                escolha_turno = input("O que deseja fazer?\n[ 1 ] Atacar\n[ 2 ] Usar item\nEscolha: ").strip()
-                while escolha_turno not in ['1', '2']:
-                    escolha_turno = input("Escolha inválida. O que deseja fazer?\n[ 1 ] Atacar\n[ 2 ] Usar item\nEscolha: ").strip()
+                escolha_turno = int(input("[ 1 ] Atacar\n"
+                                          "[ 2 ] Usar item\n"
+                                          "Escolha: "))
 
-                if escolha_turno == '1':
+                while escolha_turno not in [1, 2]:
+                    escolha_turno = int(input("Escolha inválida. O que deseja fazer?\n"
+                                              "[ 1 ] Atacar\n"
+                                              "[ 2 ] Usar item\n"
+                                              "Escolha: "))
+
+                if escolha_turno == 1:
                     self.atacar(inimigo_encontrado)
                     if inimigo_encontrado.vida > 0:
                         print(f"Você atacou o {inimigo_encontrado.nome}!")
                     else:
                         print(f"Você derrotou o {inimigo_encontrado.nome}!")
                         break
-                if escolha_turno == '2':
+                if escolha_turno == 2:
                     self.show_inventario()
 
                 # Verifica se o inimigo está vivo para contra-atacar
@@ -93,12 +113,12 @@ class Boneco:
 
             # Derrota do inimigo
             if inimigo_encontrado.vida <= 0:
+
+
                 resp = 3
                 while resp not in [1, 2]:
-                    resp = int(input(f"{inimigo_encontrado.nome} DERROTADO!\n"
-                                     f"Deseja equipar algum item ou continuar sua exploração?\n"
-                                     f"Equipar = 1 | Continuar = 2\n"
-                                     f"Faça sua escolha com base nos números demonstrados: "))
+                    print(f"{inimigo_encontrado.nome} DERROTADO!\n")
+                    resp = int(input(frase_continuidade))
                 if resp == 1:
                     self.show_inventario()
 
@@ -117,8 +137,7 @@ class Boneco:
                 print(f"{inimigo_encontrado.nome} foi derrotado!")
                 resp = 3
                 while resp not in [1, 2]:
-                    resp = int(
-                        input(f"Deseja equipar algum item ou continuar sua exploração?\nEquipar = 1 | Continuar = 2\n"))
+                    resp = int(input(frase_continuidade))
                 if resp == 1:
                     self.show_inventario()
                     self.equipar_arma()
@@ -126,15 +145,17 @@ class Boneco:
     def caminhar(self):
         # Checar chance de encontrar um item
         if random.randint(0, 100) < 50:
-            item_encontrado = itens_disp()
+
+            item_encontrado = random.choice([itens_disp_dano_fisico(), itens_disp_defesa(), itens_disp_consumiveis()])
             mensagem = self.set_item(item_encontrado)
             print(mensagem)  # Agora imprime a mensagem de item encontrado
+
         else:
             inimigo_encontrado = inimigos_animais_disp()
             mensagem = self.set_inimigo(inimigo_encontrado)
             print(mensagem)
             print(self.self_insert())
-            escolha = input("Lutar ou Fugir? (S/N) S = Lutar / N = Fugir: ").upper()
+            escolha = "frase"
             while escolha not in ['S', 'N']:
                 escolha = input("Lutar ou Fugir? (S/N) S = Lutar / N = Fugir: ").upper()
 
@@ -146,6 +167,7 @@ class Boneco:
                     print("Você escapou com sucesso!")
                 else:
                     print("Você falhou em escapar!")
+                    self.receber_dano(inimigo_encontrado.dano)
                     self.batalha(inimigo_encontrado)
 
         self.qtd_passos += 1
@@ -153,15 +175,24 @@ class Boneco:
     def equipar_arma(self):
         if len(self.inventario) < 1:
             print(f"Você não possui itens para equipar")
-
         else:
-            resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o numero indicado acima]: "))-1
-            while resposta > len(self.inventario):
-                print(f"tamanho do inventário: {len(self.inventario)}")
+            resposta = 15
+            while resposta >= len(self.inventario):  # Corrigido para garantir que o índice está dentro do limite
+                print(f"Tamanho do inventário: {len(self.inventario)}")
                 print("Item não encontrado, verifique o número utilizado")
-                resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o numero indicado acima]: "))-1
-            self.arma = self.inventario[resposta]
-            print(f"Você equipou {self.arma.nome}")
+                resposta = int(input("Qual item deseja equipar? [Escolha de acordo com o número indicado acima]: ")) - 1
+
+                # Verifica se o item existe e se é consumível
+                if self.inventario[resposta] and self.inventario[resposta].tipo == "Consumível":
+                    # Executa a cura antes de remover o item
+                    self.curar_se(self.inventario[resposta])  # Utiliza o item atual
+                    self.inventario.pop(resposta)  # Agora remove o item consumível
+                    break
+
+                # Verifica se o item possui dano, ou seja, é uma arma
+                elif self.inventario[resposta].dano > 0:
+                    self.arma = self.inventario[resposta]
+                    print(f"Você equipou {self.arma.nome}")
 
     def set_item(self, item):
         self.inventario.append(item)
@@ -184,42 +215,55 @@ class Boneco:
 
 
 def start():
-    print('--- TEXTLE RUNNERS ---')
-    print('')
-    print('\t1 - NOVO JOGO')
-    print('\t2 - CONTINUAR')
-    print('\t3 - SAIR\n'
-          '\t4 - MANUAL\n')
-    print("----------------------")
-    res = int(input('Digite o numero de acordo com as opções: '))
-    while res not in [1, 2, 3, 4]:
-        res = int(input('Digite o numero de acordo com as opções: '))
 
-    if res == 1:
-        criar_novo_jogo(input("Digite o nome do seu personagem: "))
-        #debug()
-        #debugger.show_player()
-        gameloop()
-    if res == 2:
-        carregar_jogo()
-        gameloop()
-    if res == 3:
-        creditos()
-        exit()
-    if res == 4:
-        print(f"\n\tBem vindo à Textle Runners!\n"
-              f"\tUm rpg de turnos baseado em texto\n\n"
-              f"----------- COMO JOGAR -----------\n"
-              f"1 - Ao iniciar o jogo será primeiro perguntado o nome de seu aventureiro\n"
-              f"2 - Até o momento somente o NOME é escolha do jogador\n"
-              f"3 - O gameplay loop envolve caminhar e fazer algum encontro aleatório.\n"
-              f"O encontro pode ser um inimigo ou então um item, que será pego aumaticamente e guardado em seu inventário.\n"
-              f"A cada rodada você terá a escolha de utilizar de seu inventário ou então de continuar a caminhar.\n"
-              f"\t\t    DIVIRTA-SE")
-        start() if input("pressione ENTER para continuar: ") else start()
+    while True:
+
+        try:
+
+            print('---- \033[30;47mTEXTLE RUNNERS\033[m ----')
+            print('-                      -')
+            print('-  [ 1 ] - NOVO JOGO   -')
+            print('-  [ 2 ] - CONTINUAR   -')
+            print('-  [ 3 ] - SAIR        -')
+            print('-  [ 4 ] - MANUAL      -')
+            print("------------------------")
+            res = int(input('Digite o numero de acordo com as opções: '))
+            while res not in [1, 2, 3, 4]:
+                res = int(input('Digite o numero de acordo com as opções: '))
+
+            if res == 1:
+                criar_novo_jogo(input("Digite o nome do seu personagem: "))
+                #debug()
+                #debugger.show_player()
+                gameloop()
+            if res == 2:
+                carregar_jogo()
+                gameloop()
+            if res == 3:
+                creditos()
+                exit()
+            if res == 4:
+                print(f"\n\tBem vindo à Textle Runners!\n"
+                      f"\tUm rpg de turnos baseado em texto\n\n"
+                      f"----------- COMO JOGAR -----------\n"
+                      f"1 - Ao iniciar o jogo será primeiro perguntado o nome de seu aventureiro\n"
+                      f"2 - Até o momento somente o NOME é escolha do jogador\n"
+                      f"3 - O gameplay loop envolve caminhar e fazer algum encontro aleatório.\n"
+                      f"O encontro pode ser um inimigo ou então um item, que será pego aumaticamente e guardado em seu inventário.\n"
+                      f"A cada rodada você terá a escolha de utilizar de seu inventário ou então de continuar a caminhar.\n"
+                      f"\t\t    DIVIRTA-SE")
+                start() if input("pressione ENTER para continuar: ") else start()
+
+        except Exception as erro:
+
+            print("Erro ao iniciar o jogo! Vamos tentar novamente.")
+            print(f"Erro encontrado {erro}")
+            continue
+
 
 def gameloop():
     char.show_player()
+
     print(f"Sua jornada começa aqui\n")
     while True:
 
@@ -228,15 +272,27 @@ def gameloop():
               f"[ 1 ] - Caminhar\n"
               f"[ 2 ] - Checar inventário\n"
               f"[ 3 ] - Sair\n")
-        resp = int(input("Digite o número de acordo com sua escolha: "))
+
+        resp = 0
         while resp not in [1, 2, 3]:
-            esp = int(input("Digite o número de acordo com sua escolha: "))
+            resp = int(input("Digite o número de acordo com sua escolha: "))
         if resp == 1:
             char.caminhar()
 
-        if resp == 2:
+        elif resp == 2:
             char.show_inventario()
-            char.equipar_arma()
+            equip = input("Deseja equipar algo? [ S / N ]: ").upper()
+            while equip not in ['S', 'N']:
+                equip = input("Deseja equipar algo? [ S / N ]: ").upper()
+            if equip == 'S':
+                char.equipar_arma()
+            else:
+                continue
+        elif resp == 3:
+            creditos()
+            exit()
+
+
 
 def criar_novo_jogo(nome):
     global char
