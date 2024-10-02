@@ -2,7 +2,7 @@ import sys
 import os
 import random
 from objects.itens.itens_consumiveis import itens_disp_consumiveis
-from objects.itens.itens_defesa import itens_disp_defesa
+from objects.itens.itens_defesa import itens_disp_equipamentos
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -78,7 +78,7 @@ class Boneco:
             while self.inimigo_encontro:
                 # Combate por turnos
                 print(f"\n{self.nome} vs {inimigo_encontrado.nome}")
-                print(f"Sua vida: {self.vida} | Vida do inimigo: {inimigo_encontrado.vida}\n")
+                print(f"Sua vida: {self.vida} | Vida do inimigo: {inimigo_encontrado.vida:.2f}\n")
 
                 # Prompt para o jogador escolher entre atacar ou usar um item
                 escolha_turno = int(input("[ 1 ] Atacar\n"
@@ -146,7 +146,7 @@ class Boneco:
         # Checar chance de encontrar um item
         if random.randint(0, 100) < 50:
 
-            item_encontrado = random.choice([itens_disp_dano_fisico(), itens_disp_defesa(), itens_disp_consumiveis()])
+            item_encontrado = random.choice([itens_disp_dano_fisico(), itens_disp_equipamentos(), itens_disp_consumiveis()])
             mensagem = self.set_item(item_encontrado)
             print(mensagem)  # Agora imprime a mensagem de item encontrado
 
@@ -271,10 +271,11 @@ def gameloop():
               f"O que deseja fazer?\n"
               f"[ 1 ] - Caminhar\n"
               f"[ 2 ] - Checar inventário\n"
-              f"[ 3 ] - Sair\n")
+              f"[ 3 ] - Checar status de {char.nome}\n"
+              f"[ 4 ] - Sair\n")
 
         resp = 0
-        while resp not in [1, 2, 3]:
+        while resp not in [1, 2, 3, 4]:
             resp = int(input("Digite o número de acordo com sua escolha: "))
         if resp == 1:
             char.caminhar()
@@ -288,7 +289,11 @@ def gameloop():
                 char.equipar_arma()
             else:
                 continue
+
         elif resp == 3:
+            print(char.self_insert())
+
+        elif resp == 4:
             creditos()
             exit()
 
