@@ -6,6 +6,8 @@ class Inimigos_animais:
         self.vida = vida
         self.dano = dano
         self.chance_escape = chance_escape
+        self.vida_maxima = self.vida
+
 
     def receber_dano(self, dano):
         self.vida -= dano
