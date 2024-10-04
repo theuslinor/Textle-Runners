@@ -297,6 +297,12 @@ def start():
             while res not in [1, 2, 3, 4]:
                 res = int(input('Digite o numero de acordo com as opções: '))
 
+        except Exception as erro:
+
+            print("Erro ao iniciar o jogo! Vamos tentar novamente.")
+            print(f"Erro encontrado {erro}")
+            continue
+
             if res == 1:
                 criar_novo_jogo(input("Digite o nome do seu personagem: ").strip().title())
                 #debug()
@@ -320,11 +326,6 @@ def start():
                       f"\t\t    DIVIRTA-SE")
                 start() if input("pressione ENTER para continuar: ") else start()
 
-        except Exception as erro:
-
-            print("Erro ao iniciar o jogo! Vamos tentar novamente.")
-            print(f"Erro encontrado {erro}")
-            continue
 
 
 def gameloop():
